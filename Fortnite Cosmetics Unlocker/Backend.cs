@@ -35,7 +35,7 @@ namespace Fortnite_Cosmetics_Unlocker
                 // "POST /fortnite/api/game/v2/profile/:accountId/:route/:operation"
                 if (httpListenerContext.Request.HttpMethod == "POST" && httpListenerContext.Request.Url.LocalPath.StartsWith("/fortnite/api/game/v2/profile/"))
                 {
-                    JObject profile = JObject.Parse(File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "profile_template", $"{httpListenerContext.Request.QueryString["profileId"]}.json")));
+                    JObject profile = JObject.Parse(File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "profiles", $"{httpListenerContext.Request.QueryString["profileId"]}.json")));
 
                     if (profile == null)
                     {
