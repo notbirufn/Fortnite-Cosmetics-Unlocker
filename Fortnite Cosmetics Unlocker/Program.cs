@@ -1,7 +1,9 @@
 ﻿using Fiddler;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,17 +19,75 @@ namespace Fortnite_Cosmetics_Unlocker
                 return;
             }
 
+            if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), "profile_template")))
+            {
+                Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "profile_template"));
+            }
+
+            WebClient webClient = new WebClient();
+
+            Console.WriteLine("Downloading athena.json...");
+            webClient.DownloadFile("https://sakurafn.pages.dev/hybrid/profile_template/athena.json", Path.Combine(Directory.GetCurrentDirectory(), "profile_template", "athena.json"));
+
+            Console.WriteLine("Downloading campaign.json...");
+            webClient.DownloadFile("https://sakurafn.pages.dev/hybrid/profile_template/campaign.json", Path.Combine(Directory.GetCurrentDirectory(), "profile_template", "campaign.json"));
+
+            Console.WriteLine("Downloading collection_book_people0.json...");
+            webClient.DownloadFile("https://sakurafn.pages.dev/hybrid/profile_template/collection_book_people0.json", Path.Combine(Directory.GetCurrentDirectory(), "profile_template", "collection_book_people0.json"));
+
+            Console.WriteLine("Downloading collection_book_schematics0.json...");
+            webClient.DownloadFile("https://sakurafn.pages.dev/hybrid/profile_template/collection_book_schematics0.json", Path.Combine(Directory.GetCurrentDirectory(), "profile_template", "collection_book_schematics0.json"));
+
+            Console.WriteLine("Downloading collections.json...");
+            webClient.DownloadFile("https://sakurafn.pages.dev/hybrid/profile_template/collections.json", Path.Combine(Directory.GetCurrentDirectory(), "profile_template", "collections.json"));
+
+            Console.WriteLine("Downloading common_core.json...");
+            webClient.DownloadFile("https://sakurafn.pages.dev/hybrid/profile_template/common_core.json", Path.Combine(Directory.GetCurrentDirectory(), "profile_template", "common_core.json"));
+
+            Console.WriteLine("Downloading common_public.json...");
+            webClient.DownloadFile("https://sakurafn.pages.dev/hybrid/profile_template/common_public.json", Path.Combine(Directory.GetCurrentDirectory(), "profile_template", "common_public.json"));
+
+            Console.WriteLine("Downloading creative.json...");
+            webClient.DownloadFile("https://sakurafn.pages.dev/hybrid/profile_template/creative.json", Path.Combine(Directory.GetCurrentDirectory(), "profile_template", "creative.json"));
+
+            Console.WriteLine("Downloading metadata.json...");
+            webClient.DownloadFile("https://sakurafn.pages.dev/hybrid/profile_template/metadata.json", Path.Combine(Directory.GetCurrentDirectory(), "profile_template", "metadata.json"));
+
+            Console.WriteLine("Downloading outpost0.json...");
+            webClient.DownloadFile("https://sakurafn.pages.dev/hybrid/profile_template/outpost0.json", Path.Combine(Directory.GetCurrentDirectory(), "profile_template", "outpost0.json"));
+
+            Console.WriteLine("Downloading recycle_bin.json...");
+            webClient.DownloadFile("https://sakurafn.pages.dev/hybrid/profile_template/recycle_bin.json", Path.Combine(Directory.GetCurrentDirectory(), "profile_template", "recycle_bin.json"));
+
+            Console.WriteLine("Downloading theater0.json...");
+            webClient.DownloadFile("https://sakurafn.pages.dev/hybrid/profile_template/theater0.json", Path.Combine(Directory.GetCurrentDirectory(), "profile_template", "theater0.json"));
+
+            Console.WriteLine("Downloading theater1.json...");
+            webClient.DownloadFile("https://sakurafn.pages.dev/hybrid/profile_template/theater1.json", Path.Combine(Directory.GetCurrentDirectory(), "profile_template", "theater1.json"));
+
+            Console.WriteLine("Downloading theater2.json...");
+            webClient.DownloadFile("https://sakurafn.pages.dev/hybrid/profile_template/theater2.json", Path.Combine(Directory.GetCurrentDirectory(), "profile_template", "theater2.json"));
+
+            Console.Clear();
+            Console.WriteLine("Welcome to Sakura made by you.1911");
+
             FiddlerCoreStartupSettings startupSettings = new FiddlerCoreStartupSettingsBuilder().ListenOnPort(9999).DecryptSSL().RegisterAsSystemProxy().Build();
 
             FiddlerApplication.BeforeRequest += OnBeforeRequest;
             FiddlerApplication.BeforeResponse += OnBeforeResponse;
 
+            Console.WriteLine("Starting fiddler application");
             FiddlerApplication.Startup(startupSettings);
 
             Backend.Listen();
+            Console.WriteLine("Listening to backend");
 
+            Console.WriteLine("Launch Fortnite from Epic Games Launcher");
+
+            Console.WriteLine("To exit, press any key in this window to exit");
             Console.ReadKey(true);
 
+            Console.WriteLine("Shutting down fiddler application");
             FiddlerApplication.Shutdown();
 
             Environment.Exit(0);
