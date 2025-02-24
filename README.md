@@ -1,5 +1,4 @@
 # Fortnite-Cosmetics-Unlocker
-Fortnite Cosmetics Unlocker
 
 フォートナイトのロビー内で、すべてのスキンを開放できます。
 
