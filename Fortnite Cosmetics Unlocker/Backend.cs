@@ -32,6 +32,44 @@ namespace Fortnite_Cosmetics_Unlocker
 
                 // Console.WriteLine(httpListenerContext.Request.HttpMethod + " " + httpListenerContext.Request.Url.PathAndQuery);
 
+                // "GET /lightswitch/api/service/bulk/status"
+                if (httpListenerContext.Request.HttpMethod == "GET" && httpListenerContext.Request.Url.LocalPath.StartsWith("/lightswitch/api/service/"))
+                {
+                    JArray response = new JArray
+                    {
+                        new JObject
+                        {
+                            ["serviceInstanceId"] = "fortnite",
+                            ["status"] = "UP",
+                            ["message"] = "https://sakurafn.pages.dev/",
+                            ["maintenanceUri"] = null,
+                            ["overrideCatalogIds"] = new JArray
+                            {
+                                "a7f138b2e51945ffbfdacc1af0541053"
+                            },
+                            ["allowedActions"] = new JArray
+                            {
+                                "PLAY",
+                                "DOWNLOAD"
+                            },
+                            ["banned"] = false,
+                            ["launcherInfoDTO"] = new JObject
+                            {
+                                ["appName"] = "Fortnite",
+                                ["catalogItemId"] = "4fe75bbc5a674f4f9b356b5c90567da5",
+                                ["namespace"] = "fn"
+                            }
+                        }
+                    };
+
+                    string data = response.ToString();
+
+                    httpListenerContext.Response.StatusCode = 200;
+                    httpListenerContext.Response.ContentType = "application/json";
+                    httpListenerContext.Response.ContentLength64 = Encoding.UTF8.GetBytes(data).Length;
+                    httpListenerContext.Response.OutputStream.Write(Encoding.UTF8.GetBytes(data), 0, Encoding.UTF8.GetBytes(data).Length);
+                }
+                
                 // "POST /fortnite/api/game/v2/profile/:accountId/:route/:operation"
                 if (httpListenerContext.Request.HttpMethod == "POST" && httpListenerContext.Request.Url.LocalPath.StartsWith("/fortnite/api/game/v2/profile/"))
                 {

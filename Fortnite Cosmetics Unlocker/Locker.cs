@@ -299,24 +299,19 @@ namespace Fortnite_Cosmetics_Unlocker
 
         public static bool Initialize(string deploymentId, string accountId)
         {
-            if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)))
+            if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), "loadouts")))
             {
-                return false;
+                Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "loadouts"));
             }
 
-            if (!Directory.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SakuraLocker")))
+            if (!File.Exists(Path.Combine(Directory.GetCurrentDirectory(), "loadouts", $"{deploymentId}-{accountId}.json")))
             {
-                Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SakuraLocker"));
-            }
+                JObject loadouts = JObject.Parse(LoadoutTemplate);
 
-            if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SakuraLocker", $"{deploymentId}-{accountId}_v4.json")))
-            {
-                JObject locker = JObject.Parse(LoadoutTemplate);
+                loadouts["deploymentId"] = deploymentId;
+                loadouts["accountId"] = accountId;
 
-                locker["deploymentId"] = deploymentId;
-                locker["accountId"] = accountId;
-
-                File.WriteAllText(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SakuraLocker", $"{deploymentId}-{accountId}_v4.json"), locker.ToString());
+                File.WriteAllText(Path.Combine(Directory.GetCurrentDirectory(), "loadouts", $"{deploymentId}-{accountId}.json"), loadouts.ToString());
             }
 
             return true;
@@ -324,21 +319,21 @@ namespace Fortnite_Cosmetics_Unlocker
 
         public static JObject Get(string deploymentId, string accountId)
         {
-            if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SakuraLocker", $"{deploymentId}-{accountId}_v4.json")))
+            if (!File.Exists(Path.Combine(Directory.GetCurrentDirectory(), "loadouts", $"{deploymentId}-{accountId}.json")))
             {
                 return null;
             }
 
-            JObject locker = JObject.Parse(File.ReadAllText(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SakuraLocker", $"{deploymentId}-{accountId}_v4.json")));
+            JObject loadouts = JObject.Parse(File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "loadouts", $"{deploymentId}-{accountId}.json")));
 
-            if (locker == null)
+            if (loadouts == null)
             {
                 return null;
             }
 
             return new JObject
             {
-                ["activeLoadoutGroup"] = locker,
+                ["activeLoadoutGroup"] = loadouts,
                 ["loadoutGroupPresets"] = new JArray(),
                 ["loadoutPresets"] = new JArray(),
             };
@@ -346,28 +341,28 @@ namespace Fortnite_Cosmetics_Unlocker
 
         public static JObject Put(string deploymentId, string accountId, string data)
         {
-            if (!File.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SakuraLocker", $"{deploymentId}-{accountId}_v4.json")))
+            if (!File.Exists(Path.Combine(Directory.GetCurrentDirectory(), "loadouts", $"{deploymentId}-{accountId}.json")))
             {
                 return null;
             }
 
-            JObject locker = JObject.Parse(File.ReadAllText(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SakuraLocker", $"{deploymentId}-{accountId}_v4.json")));
+            JObject loadouts = JObject.Parse(File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "loadouts", $"{deploymentId}-{accountId}.json")));
 
-            if (locker == null)
+            if (loadouts == null)
             {
                 return null;
             }
 
             JObject json = JObject.Parse(data);
 
-            if (locker["athenaItemId"].ToString() == json["athenaItemId"].ToString())
+            if (loadouts["athenaItemId"].ToString() == json["athenaItemId"].ToString())
             {
-                locker["loadouts"] = json["loadouts"];
+                loadouts["loadouts"] = json["loadouts"];
             }
 
-            File.WriteAllText(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SakuraLocker", $"{deploymentId}-{accountId}_v4.json"), locker.ToString());
+            File.WriteAllText(Path.Combine(Directory.GetCurrentDirectory(), "loadouts", $"{deploymentId}-{accountId}.json"), loadouts.ToString());
 
-            return locker;
+            return loadouts;
         }
     }
 }
