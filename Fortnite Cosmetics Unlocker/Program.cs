@@ -14,11 +14,6 @@ namespace Fortnite_Cosmetics_Unlocker
     {
         static void Main(string[] args)
         {
-            if (!Fiddler.Setup())
-            {
-                return;
-            }
-
             if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), "profiles")))
             {
                 Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "profiles"));
@@ -71,6 +66,11 @@ namespace Fortnite_Cosmetics_Unlocker
             Console.Clear();
             Console.WriteLine("Welcome to Sakura made by you.1911");
 
+            if (!Fiddler.Setup())
+            {
+                return;
+            }
+
             FiddlerCoreStartupSettings startupSettings = new FiddlerCoreStartupSettingsBuilder().ListenOnPort(9999).DecryptSSL().RegisterAsSystemProxy().Build();
 
             FiddlerApplication.BeforeRequest += OnBeforeRequest;
@@ -97,12 +97,6 @@ namespace Fortnite_Cosmetics_Unlocker
         {
             if (session.RequestHeaders["User-Agent"].Split('/')[0] == "Fortnite")
             {
-                if (session.HTTPMethodIs("CONNECT"))
-                {
-                    session["x-replywithtunnel"] = "FortniteTunnel";
-                    return;
-                }
-
                 if (session.PathAndQuery.StartsWith("/lightswitch/api/service/") || session.PathAndQuery.StartsWith("/fortnite/api/game/v2/profile/") || session.PathAndQuery.StartsWith("/api/locker/v4/"))
                 {
                     session.fullUrl = "http://localhost:1911" + session.PathAndQuery;
